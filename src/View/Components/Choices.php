@@ -21,6 +21,7 @@ class Choices extends Component
 
         public ?bool $searchable = false,
         public ?bool $single = false,
+        public ?bool $allowUnknown = false,
         public ?bool $compact = false,
         public ?string $compactText = 'selected',
         public ?bool $allowAll = false,
@@ -95,8 +96,10 @@ class Choices extends Component
                         @keyup.esc = "clear()"
 
                         x-data="{
+                            id: '{{ $uuid }}',
                             options: {{ json_encode($options) }},
                             isSingle: {{ json_encode($single) }},
+                            allowUnknown: {{ json_encode($allowUnknown) }},
                             isSearchable: {{ json_encode($searchable) }},
                             isReadonly: {{ json_encode($isReadonly()) }},
                             isDisabled: {{ json_encode($isDisabled()) }},
@@ -125,6 +128,7 @@ class Choices extends Component
                                         ? (this.selection && this.options.length  == 1) || (!this.selection && this.options.length == 0)
                                         : this.options.length <= this.selection.length
                             },
+
                             get isAllSelected() {
                                 return this.options.length == this.selection.length
                             },
@@ -143,8 +147,12 @@ class Choices extends Component
                                 } else {
                                     this.$refs.searchInput.placeholder = '';
                                 }
+                                if (this.allowUnknown) {
+                                    return
+                                }
 
                                 this.$refs.searchInput.value = ''
+
 
                             },
                             reset() {
@@ -199,12 +207,14 @@ class Choices extends Component
                                           ? preg_replace('/\((.*?)\)/', '(value, $1)', $searchFunction)
                                           : $searchFunction . '(value)'
                                         }}
+
                             },
                             dispatchChangeEvent(detail) {
                                 this.$refs.searchInput.dispatchEvent(new CustomEvent('change-selection', { bubbles: true, detail }))
                             }
                         }"
                     >
+
                         <!-- STANDARD LABEL -->
                         @if($label)
                             <div class="pt-0 label label-text font-semibold">
@@ -286,7 +296,7 @@ class Choices extends Component
                                 @input="focus()"
                                 :required="isRequired && isSelectionEmpty"
                                 :readonly="isReadonly || isDisabled || ! isSearchable"
-                                class="outline-none mt-0.5 bg-transparent"
+                                class="outline-none mt-0.5 bg-transparent w-9/12"
                                 :placeholder="placeholder"
                                 @if($searchable)
                                     @keydown.debounce.{{ $debounce }}="search($el.value)"
@@ -307,6 +317,7 @@ class Choices extends Component
                         @endif
 
                         <!-- OPTIONS LIST -->
+                        @if(!($options->isEmpty() && $allowUnknown))
                         <div x-show="focused" class="relative" wire:key="options-list-main-{{ $uuid }}">
                             <div wire:key="options-list-{{ $uuid }}" class="{{ $height }} w-full absolute z-10 shadow-xl bg-base-100 border border-base-300 rounded-lg cursor-pointer overflow-y-auto" x-anchor.bottom-start="$refs.container">
 
@@ -325,13 +336,14 @@ class Choices extends Component
                                @endif
 
                                 <!-- NO RESULTS -->
-                                <div
-                                    x-show="noResults"
-                                    wire:key="no-results-{{ rand() }}"
-                                    class="p-3 decoration-wavy decoration-warning underline font-bold border border-s-4 border-s-warning border-b-base-200"
-                                >
-                                    {{ $noResultText }}
-                                </div>
+                                @if($options->isEmpty() && !$allowUnknown)
+                                    <div
+                                        wire:key="no-results-{{ rand() }}"
+                                        class="p-3 decoration-wavy decoration-warning underline font-bold border border-s-4 border-s-warning border-b-base-200"
+                                    >
+                                        {{ $noResultText }}
+                                    </div>
+                                @endif
 
                                 @foreach($options as $option)
                                     <div
@@ -357,6 +369,7 @@ class Choices extends Component
                                 @endforeach
                             </div>
                         </div>
+                        @endif
 
                         <!-- ERROR -->
                         @if(!$omitError && $errors->has($errorFieldName()))
