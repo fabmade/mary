@@ -102,7 +102,7 @@ class Choices extends Component
                             isDisabled: {{ json_encode($isDisabled()) }},
                             isRequired: {{ json_encode($isRequired()) }},
                             minChars: {{ $minChars }},
-                            placeholder: '{{ $placeholder }}',
+                            placeholder: {{ json_encode($placeholder) }},
 
                             init() {
                                 // Fix weird issue when navigating back
