@@ -138,7 +138,12 @@ class Choices extends Component
                             },
                             clear() {
                                 this.focused = false;
-                                this.$refs.searchInput.placeholder = '{{ $placeholder }}';
+                                if (!this.selection) {
+                                    this.$refs.searchInput.placeholder = '{{ $placeholder }}';
+                                } else {
+                                    this.$refs.searchInput.placeholder = '';
+                                }
+
                                 this.$refs.searchInput.value = ''
 
                             },
