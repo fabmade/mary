@@ -102,6 +102,7 @@ class Choices extends Component
                             isDisabled: {{ json_encode($isDisabled()) }},
                             isRequired: {{ json_encode($isRequired()) }},
                             minChars: {{ $minChars }},
+                            placeholder: '{{ $placeholder }}',
 
                             init() {
                                 // Fix weird issue when navigating back
@@ -281,7 +282,7 @@ class Choices extends Component
                                 :required="isRequired && isSelectionEmpty"
                                 :readonly="isReadonly || isDisabled || ! isSearchable"
                                 class="outline-none mt-0.5 bg-transparent w-20"
-                                :placeholder="$placeholder"
+                                :placeholder="placeholder"
                                 @if($searchable)
                                     @keydown.debounce.{{ $debounce }}="search($el.value)"
                                 @endif
