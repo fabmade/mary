@@ -17,6 +17,7 @@ class Choices extends Component
         public ?string $icon = null,
         public ?string $hint = null,
         public ?string $hintClass = 'label-text-alt text-gray-400 py-1 pb-0',
+        public ?string $placeholder = null,
 
         public ?bool $searchable = false,
         public ?bool $single = false,
@@ -278,7 +279,7 @@ class Choices extends Component
                                 :readonly="isReadonly || isDisabled || ! isSearchable"
                                 :class="(isReadonly || isDisabled || !isSearchable || !focused) && '!w-1'"
                                 class="outline-none mt-0.5 bg-transparent w-20"
-
+                                placeholder="{{ $placeholder }}"
                                 @if($searchable)
                                     @keydown.debounce.{{ $debounce }}="search($el.value)"
                                 @endif
