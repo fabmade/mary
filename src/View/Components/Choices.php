@@ -137,7 +137,9 @@ class Choices extends Component
                             },
                             clear() {
                                 this.focused = false;
+                                this.$refs.searchInput.placeholder = '{{ $placeholder }}';
                                 this.$refs.searchInput.value = ''
+
                             },
                             reset() {
                                 this.clear();
@@ -178,6 +180,7 @@ class Choices extends Component
 
                                 this.$refs.searchInput.value = ''
                                 this.$refs.searchInput.focus()
+                                this.$refs.searchInput.placeholder = ''
                             },
                             search(value) {
                                 if (value.length < this.minChars) {
@@ -277,9 +280,8 @@ class Choices extends Component
                                 @input="focus()"
                                 :required="isRequired && isSelectionEmpty"
                                 :readonly="isReadonly || isDisabled || ! isSearchable"
-                                :class="(isReadonly || isDisabled || !isSearchable || !focused) && '!w-1'"
                                 class="outline-none mt-0.5 bg-transparent w-20"
-                                placeholder="{{ $placeholder }}"
+                                :placeholder="$placeholder"
                                 @if($searchable)
                                     @keydown.debounce.{{ $debounce }}="search($el.value)"
                                 @endif
