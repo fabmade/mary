@@ -286,7 +286,7 @@ class Choices extends Component
                                 @input="focus()"
                                 :required="isRequired && isSelectionEmpty"
                                 :readonly="isReadonly || isDisabled || ! isSearchable"
-                                class="outline-none mt-0.5 bg-transparent"
+                                class="outline-none mt-0.5 bg-transparent pl-1.5"
                                 :placeholder="placeholder"
                                 @if($searchable)
                                     @keydown.debounce.{{ $debounce }}="search($el.value)"
