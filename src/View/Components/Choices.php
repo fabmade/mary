@@ -237,7 +237,7 @@ class Choices extends Component
 
                             {{
                                 $attributes->except(['wire:model', 'wire:model.live'])->class([
-                                    "select select-bordered select-primary w-full h-fit pe-16 pb-1 pt-1.5 inline-block cursor-pointer relative flex-1",
+                                    "select select-bordered select-primary w-full h-fit pe-16 pb-1 pt-1.5 inline-block cursor-pointer relative flex-1 pl-1.5",
                                     'border border-dashed' => $isReadonly(),
                                     'select-error' => $errors->has($errorFieldName()),
                                     'rounded-s-none' => $prepend,
@@ -286,7 +286,7 @@ class Choices extends Component
                                 @input="focus()"
                                 :required="isRequired && isSelectionEmpty"
                                 :readonly="isReadonly || isDisabled || ! isSearchable"
-                                class="outline-none mt-0.5 bg-transparent pl-1.5"
+                                class="outline-none mt-0.5 bg-transparent"
                                 :placeholder="placeholder"
                                 @if($searchable)
                                     @keydown.debounce.{{ $debounce }}="search($el.value)"
